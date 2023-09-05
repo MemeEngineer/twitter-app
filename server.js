@@ -50,7 +50,20 @@ app.get('/tweets/new', (req, res) => {
     res.render('New')
 })
 
-
+/*
+* EDIT
+*/
+app.get('/tweets/:id/edit', async (req, res)=> {
+    const {id} = req.params
+    try{
+        //find the tweet
+        const tweet = await Tweet.findById(id)
+        //return the edit template with the tweet data
+        res.render('Edit', {tweet})
+    }catch(error){
+        console.log(error)
+    }
+})
 
 /**
  * Show
@@ -82,10 +95,17 @@ app.post('/api/tweets', async (req, res) => {
 */
 app.put('/api/tweets/:id', async(req, res)=> {
     const {id} = req.params
+    console.log(req.body)
+    if(req.body.sponsored === 'on'){
+        req.body.sponsored = true;
+    }else{
+        req.body.sponsored = false;
+    }
     try{
         //  const tweetToUpdate = await Tweet.findById(id)
          const updatedTweet = await Tweet.findByIdAndUpdate(id, req.body, {new: true})
-        res.send(updatedTweet)
+        // res.send(updatedTweet)
+        res.redirect(`/tweets/${id}`)
     }catch(e){
         console.log(e)
     }
