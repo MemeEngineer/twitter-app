@@ -2,7 +2,7 @@ const mongoose = require('mongoose')
 const commentSchema = new mongoose.Schema({
     body: {type: String, required:true},
     author: {type: String, required: true}
-})
+}, {timestamps: true})
 
 const tweetSchema = new mongoose.Schema({
     title: { 

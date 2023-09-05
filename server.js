@@ -3,18 +3,22 @@ require('dotenv').config();
 const connectDB = require('./utils/connectDB');
 const Tweet = require('./models/Tweet');
 const manyTweets = require('./models/manytweets');
+const jsxEngine = require('jsx-view-engine')
+//using override method because forms can only POST and GET data
+const methodOverride = require('method-override')
 
 //* Variables
 const app = express();
 const PORT = 3000;
 
 //* App Config
-
+app.set('view engine', 'jsx');
+app.engine('jsx',jsxEngine())
 
 //* Middleware
 app.use(express.urlencoded({extended: false}));
 app.use(express.json());
-
+app.use(methodOverride('_method'))
 
 
 // * Routes
@@ -34,11 +38,19 @@ app.get('/', (req, res) => {
 app.get('/tweets', async (req, res) => {
     try {
         const tweets = await Tweet.find({});
-        res.send(tweets)
+        res.render('Index', {tweets})
     } catch (e) {
         console.log(e);
     }
 });
+/*
+* NEW
+*/
+app.get('/tweets/new', (req, res) => {
+    res.render('New')
+})
+
+
 
 /**
  * Show
@@ -47,7 +59,8 @@ app.get('/tweets/:id', async(req, res) => {
     const {id} = req.params;
     try {
         const tweet = await Tweet.findById(id);
-        res.send(tweet);
+        // res.send(tweet);
+        res.render('Show', {tweet})
     } catch (e) {
         console.log(e);
     }
@@ -58,15 +71,16 @@ app.get('/tweets/:id', async(req, res) => {
 /**
  * Create POST
  */
-app.post('/tweets', async (req, res) => {
+app.post('/api/tweets', async (req, res) => {
     const createdTweet = await Tweet.create(req.body);
-    res.send(createdTweet);
+    // res.send(createdTweet);
+    res.redirect('/tweets')
 });
 
 /*
 * Update
 */
-app.put('/tweets/:id', async(req, res)=> {
+app.put('/api/tweets/:id', async(req, res)=> {
     const {id} = req.params
     try{
         //  const tweetToUpdate = await Tweet.findById(id)
@@ -80,11 +94,12 @@ app.put('/tweets/:id', async(req, res)=> {
 /*
 *Delete
 */
-app.delete('/tweets/:id', async(req, res)=> {
+app.delete('/api/tweets/:id', async(req, res)=> {
     const {id} = req.params
     try{
         const deletedTweet = await Tweet.findByIdAndDelete(id);
-        res.send(deletedTweet)
+        // res.send(deletedTweet)
+        res.redirect('/tweets')
     }catch(e){
         console.log(e);
     }
