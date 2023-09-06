@@ -128,13 +128,14 @@ app.delete('/api/tweets/:id', async(req, res)=> {
 /*
 * *Add comment
 */
-app.put('/tweets/add-comment/:id', async (req, res)=> {
+app.put('/api/tweets/add-comment/:id', async (req, res)=> {
     const {id} = req.params;
     const tweet = await Tweet.findById(id);
     console.log(tweet)
     tweet.comments.push(req.body)
     const updatedTweet = await Tweet.findByIdAndUpdate(id, tweet, {new: true})
-    res.send(updatedTweet)
+    // res.send(updatedTweet)
+    res.redirect(`/tweets/${id}`);
 })
 
 
@@ -149,7 +150,8 @@ app.get('/api/tweets/add-like/:id', async (req, res) => {
     tweetToUpdate.likes++;
     //update the tweet with the new data
     const updatedTweet = await Tweet.findByIdAndUpdate(id, tweetToUpdate, {new: true})
-    res.send(updatedTweet)
+    // res.send(updatedTweet)
+    res.redirect('/tweets')
 })
 
 
