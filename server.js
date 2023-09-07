@@ -9,7 +9,7 @@ const methodOverride = require('method-override')
 
 //* Variables
 const app = express();
-const PORT = 3000;
+const PORT = process.env.PORT || 3000;
 
 //* App Config
 app.set('view engine', 'jsx');
@@ -19,7 +19,7 @@ app.engine('jsx',jsxEngine())
 app.use(express.urlencoded({extended: false}));
 app.use(express.json());
 app.use(methodOverride('_method'))
-
+app.use(express.static('public'))
 
 // * Routes
 

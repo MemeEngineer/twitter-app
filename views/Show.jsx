@@ -1,7 +1,9 @@
 const React = require('react')
+const DefaultLayout = require('./Layout/Default')
 
 function Show({tweet}){
     return(
+      <DefaultLayout title='Tweets'>
         <div>
             
             <div>{tweet.title}</div>
@@ -39,6 +41,7 @@ function Show({tweet}){
         </form>
       </div>
         </div>
+        </DefaultLayout>
     )
 }
 
